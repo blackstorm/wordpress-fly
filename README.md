@@ -1,2 +1,1 @@
-# wordpress-fly
-craete wordpress instance on fly.io
+## Create WordPress on fly.io
