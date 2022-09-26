@@ -1,0 +1,38 @@
+# fly.toml file generated for wordpress on 2022-09-23T10:49:29Z
+
+app = "wordpress"
+
+[env]
+  WORDPRESS_DB_HOST = "mysql-database.internal"
+  WORDPRESS_DB_NAME = "wp"
+  WORDPRESS_DB_USER = "root"
+  WORDPRESS_DB_PASSWORD = "my-secret-pw"
+  WORDPRESS_CONFIG_EXTRA = "define(\"MYSQL_CLIENT_FLAGS\", MYSQLI_CLIENT_SSL);"
+
+[mounts]
+  destination = "/var/www/html"
+  source = "wordpressdata"
+
+[build]
+  image = "wordpress:6-php8.0-apache"
+
+[[services]]
+  internal_port = 80
+  protocol = "tcp"
+  [services.concurrency]
+    hard_limit = 50
+    soft_limit = 25
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
+
+  [[services.ports]]
+    handlers = ["http"]
+    port = 80
+    force_https = true
+
+  [[services.tcp_checks]]
+    grace_period = "1s"
+    interval = 5000
+    timeout = 2000
